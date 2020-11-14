@@ -6,6 +6,8 @@ VERSION_PROM_MAIN="$VNUMBER_PROM_MAIN.linux-armv7"
 VNUMBER_NODE_EXPR="1.0.1"
 VERSION_NODE_EXPR="$VNUMBER_NODE_EXPR.linux-armv7"
 
+VERSION_GRAFANA="7.3.2_armhf"
+
 URL_PROM_MAIN="https://github.com/prometheus/prometheus/releases/download/v$VNUMBER_PROM_MAIN/prometheus-$VERSION_PROM_MAIN.tar.gz"
 URL_NODE_EXPR="https://github.com/prometheus/node_exporter/releases/download/v$VNUMBER_NODE_EXPR/node_exporter-$VERSION_NODE_EXPR.tar.gz"
 
@@ -100,4 +102,17 @@ else
 	sudo systemctl enable --now prometheus
 fi
 	sudo systemctl restart prometheus
-# ----
+# ---- GRAFANA + REQUERIMIENTOS
+sudo apt-get install -y adduser libfontconfig1
+# https://stackoverflow.com/questions/1298066/check-if-an-apt-get-package-is-installed-and-then-install-it-if-its-not-on-linu
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' grafana|grep "install ok installed")
+if [ "" = "$PKG_OK" ]; then
+	echo "Instalando grafana $VERSION_GRAFANA..."
+	wget https://dl.grafana.com/oss/release/grafana_$VERSION_GRAFANA.deb
+	sudo dpkg -i grafana_7.3.2_armhf.deb
+	sudo rm -f grafana_7.3.2_armhf.deb
+	sudo systemctl enable --now grafana-server
+else
+	echo "Grafana $VERSION_GRAFANA ya se encuentra instalado..."
+fi
+	sudo systemctl restart grafana-server
