@@ -24,6 +24,7 @@ SERV_EXPR="/etc/systemd/system/node_exporter.service"
 
 # ---- BAJAR y MOVER
 sudo mkdir -p $DEST_ROOT_DIR
+sudo chown -R javier:javier $DEST_ROOT_DIR
 
 if [ -d $FOLDER_PROM_MAIN ]; then
 	echo "Prometheus $VERSION_PROM_MAIN ya existe..."
